@@ -18,12 +18,31 @@ process.stdin.on('end', () => {
     leftList.sort();
     rightList.sort();
 
-    console.log('Left:', leftList);
-    console.log('Right:', rightList);
-
     const distance = leftList.reduce((previousValue, currentValue, index) => {
         return previousValue + Math.abs(currentValue - rightList[index]);
     }, 0);
 
     console.log('Distance: ', distance);
+
+    let similarity = 0;
+    let rightIndex = 0;
+    let previousLeftValue = 0;
+    let previousScore = 0;
+
+    leftList.forEach((leftValue) => {
+        if (leftValue !== previousLeftValue) {
+            let similarities = 0;
+            while (rightIndex < rightList.length && rightList[rightIndex] <= leftValue) {
+                if (rightList[rightIndex] === leftValue) {
+                    similarities++;
+                }
+                rightIndex++;
+            }
+            previousLeftValue = leftValue;
+            previousScore = similarities * leftValue;
+        }
+        similarity += previousScore;
+    });
+
+    console.log('Similarity: ', similarity);
 });
